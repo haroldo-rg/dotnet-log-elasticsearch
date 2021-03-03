@@ -3,9 +3,8 @@ using System.IO;
 using System.Reflection;
 using Serilog.Core;
 using Serilog.Events;
-using LogElastic.Interface;
 
-namespace LogElastic
+namespace LogElastic.Configuration
 {
     public class MyCustomLogEnricher : ILogEventEnricher
     {

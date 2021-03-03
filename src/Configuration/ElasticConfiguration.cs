@@ -1,4 +1,4 @@
-namespace LogElastic
+namespace LogElastic.Configuration
 {
     public class ElasticConfiguration
     {

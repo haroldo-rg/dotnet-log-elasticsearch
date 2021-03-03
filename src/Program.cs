@@ -1,10 +1,8 @@
 ﻿using System;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Serilog;
-using Serilog.Sinks.Elasticsearch;
 using LogElastic.Interface;
+using LogElastic.Configuration;
 
 namespace LogElastic
 {
@@ -14,7 +12,7 @@ namespace LogElastic
         {
             // configurar injeção de dependência dos serviços
             var serviceCollection = new ServiceCollection();
-            ConfigureServices(serviceCollection, args);
+            ConfigureServices<Program>(serviceCollection, args);
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
 
@@ -45,33 +43,10 @@ namespace LogElastic
         }
 
 
-        private static void ConfigureServices(IServiceCollection services, string[] args)
+        private static void ConfigureServices<T>(IServiceCollection services, string[] args) where T : class
         {
-            // Configuração do log com ElasticSearch
-            IConfiguration Configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddEnvironmentVariables()
-                .AddCommandLine(args)
-                .Build();
-
-            ElasticConfiguration elasticConfig = new ElasticConfiguration(
-                                                        Configuration["ElasticConfiguration:Uri"],
-                                                        Configuration["ElasticConfiguration:UserName"],
-                                                        Configuration["ElasticConfiguration:Password"]
-                                                    );
-
-            Log.Logger = new LoggerConfiguration()
-                //.Enrich.FromLogContext()
-                .Enrich.With(new MyCustomLogEnricher()) // classe customizada que adiciona propriedades ao log
-                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticConfig.Uri))
-                {
-                    AutoRegisterTemplate = true,
-                    ModifyConnectionSettings = x => x.BasicAuthentication(elasticConfig.UserName, elasticConfig.Password),
-                })
-            .CreateLogger();
-
-            services.AddLogging(configure => configure.AddSerilog())
-                    .AddTransient<Program>();
+            // configuração do serviço de log
+            new MyLoggerConfiguration().ConfigureLogServices<T>(services, args);
 
             // Configuração do service serviço que efetua o processamento
             services.AddTransient(typeof(IWorker), typeof(Worker));
