@@ -39,7 +39,7 @@ Clicar no botão *Create index pattern* e configurar o padrão *logstash-AAAA.MM
 
 Clicar novamente no ícone hamburger e em *Analytics* acessar a opção *Discover* e os logs serão exibidos.
 
-[Instruções em formato PDF com os prints das telas](https://github.com/haroldo-rg/dotnet-log-elasticsearch/passo-a-passo.pdf)
+[Instruções em formato PDF com os prints das telas](https://github.com/haroldo-rg/dotnet-log-elasticsearch/blob/main/passo-a-passo.pdf)
 
 ## Palavras-chave
 
